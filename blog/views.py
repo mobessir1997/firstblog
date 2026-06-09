@@ -5,6 +5,7 @@ from django.http import HttpResponseForbidden
 from django.db.models import Q
 from .models import Post, Comment, Tag
 from .forms import PostForm, CommentForm
+from django.core.paginator import Paginator
 # Create your views here.
 def home(request):
     posts = Post.objects.all().order_by('-created_at')
@@ -14,8 +15,12 @@ def home(request):
         Q(title__icontains=search_query) |
         Q(content__icontains=search_query)
         )
+    paginator = Paginator(posts, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
-    return render(request, 'blog/home.html', {'posts':posts, 'search_query':search_query})
+
+    return render(request, 'blog/home.html', {'posts':posts, 'search_query':search_query, 'page_obj':page_obj})
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)

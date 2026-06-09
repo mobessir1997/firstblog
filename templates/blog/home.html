@@ -21,9 +21,10 @@
     </div>
 <div class="row">
     <div class="col-md-8">
+        
         <h2 class="mb-4 text-secondary">সাম্প্রতিক ব্লগসমূহ</h2>
 
-        {% for post in posts %}
+        {% for post in page_obj %}
             <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                     <h3 class="card-title">
@@ -50,6 +51,46 @@
             <div class="alert alert-warning">কোনো ব্লগ পোস্ট খুঁজে পাওয়া যায়নি!</div>
         {% endfor %}
     </div>
+    <div class="mt-4 d-flex gap-2">
+
+    {% if page_obj.has_previous %}
+
+        <a href="?page=1"
+           class="btn btn-outline-primary">
+           First
+        </a>
+
+        <a href="?page={{ page_obj.previous_page_number }}"
+           class="btn btn-outline-primary">
+           Previous
+        </a>
+
+    {% endif %}
+
+    <span class="btn btn-primary">
+
+        Page {{ page_obj.number }}
+        of
+        {{ page_obj.paginator.num_pages }}
+
+    </span>
+
+    {% if page_obj.has_next %}
+
+        <a href="?page={{ page_obj.next_page_number }}"
+           class="btn btn-outline-primary">
+           Next
+        </a>
+
+        <a href="?page={{ page_obj.paginator.num_pages }}"
+           class="btn btn-outline-primary">
+           Last
+        </a>
+
+    {% endif %}
+
+</div>
+
 
     
 </div>

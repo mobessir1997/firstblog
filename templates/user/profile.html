@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}আমার প্রোফাইল - জ্যাঙ্গো ব্লগ{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow p-4 my-4 bg-white rounded">
+            <div class="d-flex align-items-center border-bottom pb-4 mb-4">
+                <img src="{{ user.profile.image.url }}" class="rounded-circle img-thumbnail shadow-sm" style="width: 120px; height: 120px; object-fit: cover;">
+                <div class="ms-4">
+                    <h2 class="mb-1 text-dark">{{ user.username }}</h2>
+                    <p class="text-muted mb-2">{{ user.email|default:"কোনো ইমেইল যোগ করা হয়নি" }}</p>
+                    <p class="mb-0 text-secondary"><strong>বায়ো:</strong> {{ user.profile.bio|default:"এখনো কোনো বায়ো লেখা হয়নি।" }}</p>
+                </div>
+            </div>
+
+            <h4 class="text-secondary mb-3">✏ প্রোফাইল তথ্য আপডেট করুন</h4>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <h5 class="text-primary mt-3">বেসিক ইনফো</h5>
+                {% for field in u_form %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+
+                <h5 class="text-primary mt-4">প্রোফাইল ডিটেইলস</h5>
+                {% for field in p_form %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="btn btn-primary px-4 mt-3">আপডেট করুন</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    var elements = document.querySelectorAll('input, textarea, select');
+    for (var i = 0; i < elements.length; i++) {
+        // ফাইল আপলোড ইনপুট ছাড়া বাকি সব form-control হবে
+        if(elements[i].type !== 'file') {
+            elements[i].classList.add('form-control');
+        } else {
+            elements[i].classList.add('form-control-file');
+        }
+    }
+</script>
+{% endblock %}

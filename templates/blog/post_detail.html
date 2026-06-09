@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }} - জ্যাঙ্গো ব্লগ{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        <div class="card shadow-sm mb-4 bg-white rounded">
+            <div class="card-body p-4">
+                <h1 class="card-title display-5 fw-bold text-dark">{{ post.title }}</h1>
+                
+                <div class="text-muted small mb-3 pb-2 border-bottom">
+                    ক্যাটাগরি: <span class="badge bg-info text-dark">{{ post.category.name|default:"নাই" }}</span> | 
+                    লেখক: <strong class="text-primary">{{ post.author.username }}</strong> | 
+                    প্রকাশিত: {{ post.created_at|date:"F d, Y, g:i a" }}
+                </div>
+
+                <div class="mb-4">
+                    {% for tag in post.tags.all %}
+                        <span class="badge bg-secondary p-2 me-1">#{{ tag.name }}</span>
+                    {% empty %}
+                        <small class="text-muted">কোনো ট্যাগ নেই</small>
+                    {% endfor %}
+                </div>
+
+                <p class="card-text fs-5 text-secondary" style="line-height: 1.8; white-space: pre-line;">
+                    {{ post.content }}
+                </p>
+
+                {% if post.author == user %}
+                    <div class="mt-4 pt-3 border-top">
+                        <a href="{% url 'post-update' pk=post.pk %}" class="btn btn-warning btn-sm px-3 me-2">✏ এডিট করুন</a>
+                        <a href="{% url 'post-delete' pk=post.pk %}" class="btn btn-danger btn-sm px-3">🗑 ডিলিট করুন</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card shadow-sm p-4 mb-5 bg-white rounded">
+            <h4 class="mb-4 text-secondary">💬 মন্তব্যসমূহ ({{ comments.count }})</h4>
+            
+            {% if user.is_authenticated %}
+                <form method="POST" class="mb-4">
+                    {% csrf_token %}
+                    <div class="mb-2">
+                        {{ form.body }}
+                    </div>
+                    <button type="submit" class="btn btn-success btn-sm px-4">মন্তব্য সাবমিট করুন</button>
+                </form>
+            {% else %}
+                <div class="alert alert-light border text-center py-3">
+                    <p class="mb-0">মন্তব্য করতে চাইলে দয়া করে <a href="{% url 'login' %}" class="fw-bold text-decoration-none">লগইন করুন</a>।</p>
+                </div>
+            {% endif %}
+
+            {% for comment in comments %}
+                <div class="p-3 mb-3 bg-light rounded border-start border-primary border-4">
+                    <div class="d-flex justify-content-between mb-1">
+                        <strong class="text-dark">{{ comment.author.username }}</strong>
+                        <small class="text-muted">{{ comment.created_at|date:"M d, Y, g:i a" }}</small>
+                    </div>
+                    <p class="mb-0 text-secondary small">{{ comment.body|linebreaks }}</p>
+                </div>
+            {% empty %}
+                <p class="text-muted text-center py-3">এখনো কোনো মন্তব্য করা হয়নি। প্রথম মন্তব্যটি আপনার হোক!</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    // কমেন্ট বক্সের টেক্সটএরিয়া সুন্দর করা
+    var textarea = document.querySelector('textarea');
+    if(textarea) {
+        textarea.classList.add('form-control');
+        textarea.setAttribute('rows', '3');
+        textarea.setAttribute('placeholder', 'আপনার সুন্দর মতামতটি এখানে লিখুন...');
+    }
+</script>
+{% endblock %}

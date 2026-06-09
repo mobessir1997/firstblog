@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}হোমপেজ - জ্যাঙ্গো ব্লগ{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h2 class="mb-4 text-secondary">সাম্প্রতিক ব্লগসমূহ</h2>
+
+        {% for post in posts %}
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        <a href="{% url 'post-detail' pk=post.pk %}" class="text-decoration-none text-primary">{{ post.title }}</a>
+                    </h3>
+                    
+                    <div class="mb-2">
+                        {% for tag in post.tags.all %}
+                            <span class="badge bg-secondary">#{{ tag.name }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <p class="card-text text-muted">{{ post.content|truncatewords:30 }}</p>
+                </div>
+                <div class="card-footer text-muted bg-white border-top-0">
+                    <small>
+                        ক্যাটাগরি: <span class="badge bg-info text-dark">{{ post.category.name|default:"নাই" }}</span> | 
+                        লেখক: <strong>{{ post.author.username }}</strong> | 
+                        সময়: {{ post.created_at|date:"F d, Y" }}
+                    </small>
+                </div>
+            </div>
+        {% empty %}
+            <div class="alert alert-warning">কোনো ব্লগ পোস্ট খুঁজে পাওয়া যায়নি!</div>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-3 mb-4 bg-white shadow-sm">
+            <h5>🔍 ব্লগ খুঁজুন</h5>
+            <form method="GET" action="{% url 'blog-home' %}" class="d-flex gap-2">
+                <input type="text" name="q" class="form-control" placeholder="এখানে লিখুন..." value="{{ request.GET.q }}">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            
+            {% if request.GET.q %}
+                <div class="mt-2 small text-muted">
+                    ফলাফল: {{ posts.count }} টি। 
+                    <a href="{% url 'blog-home' %}" class="text-danger ms-2 text-decoration-none">❌ Clear</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

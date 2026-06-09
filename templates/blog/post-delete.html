@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}পোস্ট ডিলিট নিশ্চিত করুন - জ্যাঙ্গো ব্লগ{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow border-danger my-5 bg-white rounded">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">⚠ সতর্কবার্তা!</h5>
+            </div>
+            <div class="card-body p-4 text-center">
+                <h3>আপনি কি নিশ্চিত?</h3>
+                <p class="text-muted mt-2">আপনি কি সত্যিই <strong>"{{ post.title }}"</strong> পোস্টটি চিরতরে মুছে ফেলতে চান? এই কাজ আর ফিরিয়ে আনা যাবে না।</p>
+                
+                <form method="POST" class="mt-4">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger px-4">হ্যাঁ, ডিলিট করুন</button>
+                    <a href="{% url 'post-detail' pk=post.pk %}" class="btn btn-outline-secondary ms-2 px-4">বাতিল করুন</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

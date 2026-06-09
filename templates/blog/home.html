@@ -3,6 +3,22 @@
 {% block title %}হোমপেজ -  My Blog{% endblock %}
 
 {% block content %}
+<div class="col-md-4">
+        <div class="card p-3 mb-4 bg-white shadow-sm">
+            <h5>🔍 ব্লগ খুঁজুন</h5>
+            <form method="GET" action="{% url 'blog-home' %}" class="d-flex gap-2">
+                <input type="text" name="q" class="form-control" placeholder="এখানে লিখুন..." value="{{ request.GET.q }}">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            
+            {% if request.GET.q %}
+                <div class="mt-2 small text-muted">
+                    ফলাফল: {{ posts.count }} টি। 
+                    <a href="{% url 'blog-home' %}" class="text-danger ms-2 text-decoration-none">❌ Clear</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 <div class="row">
     <div class="col-md-8">
         <h2 class="mb-4 text-secondary">সাম্প্রতিক ব্লগসমূহ</h2>
@@ -35,21 +51,6 @@
         {% endfor %}
     </div>
 
-    <div class="col-md-4">
-        <div class="card p-3 mb-4 bg-white shadow-sm">
-            <h5>🔍 ব্লগ খুঁজুন</h5>
-            <form method="GET" action="{% url 'blog-home' %}" class="d-flex gap-2">
-                <input type="text" name="q" class="form-control" placeholder="এখানে লিখুন..." value="{{ request.GET.q }}">
-                <button type="submit" class="btn btn-primary">Search</button>
-            </form>
-            
-            {% if request.GET.q %}
-                <div class="mt-2 small text-muted">
-                    ফলাফল: {{ posts.count }} টি। 
-                    <a href="{% url 'blog-home' %}" class="text-danger ms-2 text-decoration-none">❌ Clear</a>
-                </div>
-            {% endif %}
-        </div>
-    </div>
+    
 </div>
 {% endblock %}

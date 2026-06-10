@@ -96,4 +96,9 @@ def post_delete(request, pk):
         post.delete()
         return redirect('blog-home')
     return render(request, 'blog/post-delete.html', {'post':post})
+#def category_post(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    posts = Post.objects.filter(category=category)
+    return render(request, 'blog/home.html', {'category':category, 'posts':posts})
+
 

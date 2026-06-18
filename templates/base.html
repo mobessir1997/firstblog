@@ -13,21 +13,30 @@
 <body class="bg-light">
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'blog-home' %}">My Blog</a>
-            {% comment %}
-            <ul class="navbar-text text-white me-3">
-          {% for category in categories %}
-            <a class="btn btn-outline-light btn-sm me-2" href="{% url 'category_post' slug %}"
-                {{ category.name }}
-            </a>
-             {% empty %}
-             <p> No found </p>
-         {% endfor %}
-         
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'blog-home' %}">MyBlog</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-collapse navbar-nav me-auto mb-2 mb-lg-0">
         
-        </ul>
-        {% endcomment %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'blog-home' %}">Home</a>
+        </li>
+
+        {% for cat in categories %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'category_post' cat.slug %}">{{ cat.name }}</a>
+        </li>
+        {% empty %}
+        {% endfor %}
+
+      </ul>
+    </div>
+  </div>
+</nav>
             {% if user.is_authenticated %}
             <span class="navbar-text text-white me-3">স্বাগতম, <strong>{{ user.username }}</strong></span>
             {% endif %}

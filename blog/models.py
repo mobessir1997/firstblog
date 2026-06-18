@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Category(models.Model):
     name = models.TextField(max_length=100)
-    slug = models.SlugField
+    slug = models.SlugField(null=True, unique=True)
 
     def __str__(self):
         return self.name

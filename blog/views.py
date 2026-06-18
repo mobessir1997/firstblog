@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden
 from django.db.models import Q
-from .models import Post, Comment, Tag
+from .models import Post, Comment, Tag, Category
 from .forms import PostForm, CommentForm
 from django.core.paginator import Paginator
 # Create your views here.
@@ -81,7 +81,7 @@ def post_update(request, pk):
                     if not tag_obj:
                         tag_obj = Tag.objects.create(name=tag_name)
                     post.tags.add(tag_obj)
-                    print(tag_data)
+                    
         return redirect('post-detail', pk=post.pk)
     else:
         current_tags = ",".join([tag.name for tag in post.tags.all() if not tag.name.startswith('<built-in')])
@@ -96,9 +96,13 @@ def post_delete(request, pk):
         post.delete()
         return redirect('blog-home')
     return render(request, 'blog/post-delete.html', {'post':post})
-#def category_post(request, slug):
+def category_post(request, slug):
     category = get_object_or_404(Category, slug=slug)
-    posts = Post.objects.filter(category=category)
-    return render(request, 'blog/home.html', {'category':category, 'posts':posts})
+    posts = Post.objects.filter(category=category).order_by('-id')
+    context = {
+        'category':category,
+        'posts':posts
+    }
+    return render(request, 'blog/category.html', context)
 
 

@@ -80,12 +80,8 @@ WSGI_APPLICATION = 'gblog.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'blogdb',
-        'USER': os.environ.get('D_USER'),
-        'PASSWORD':os.environ.get('D_PASSWORD'),
-        'HOST' :'localhost',
-        'PORT': '5432'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 

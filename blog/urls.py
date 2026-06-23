@@ -1,5 +1,10 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from . import views
+from .views import PostViewset
+
+router = DefaultRouter()
+router.register(r'posts', PostViewset )
 
 urlpatterns = [
     path('', views.home, name='blog-home'),
@@ -8,4 +13,5 @@ urlpatterns = [
     path('post/<int:pk>/edit/', views.post_update, name='post-update'),
     path('post/<int:pk>/delete/', views.post_delete, name='post-delete'),
     path('category/<slug:slug>/', views.category_post, name='category_post'),
+    path("api/", include(router.urls)),
 ]

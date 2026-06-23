@@ -6,6 +6,13 @@ from django.db.models import Q
 from .models import Post, Comment, Tag, Category
 from .forms import PostForm, CommentForm
 from django.core.paginator import Paginator
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
+from rest_framework.response import Response
+from rest_framework import generics, status
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from .serializers import PostSerailizer
+from .permission import IsOwnerOrReadOnly
+from rest_framework import viewsets
 # Create your views here.
 def home(request):
     posts = Post.objects.all().order_by('-created_at')
@@ -15,7 +22,7 @@ def home(request):
         Q(title__icontains=search_query) |
         Q(content__icontains=search_query)
         )
-    paginator = Paginator(posts, 8)
+    paginator = Paginator(posts, 4)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -106,3 +113,20 @@ def category_post(request, slug):
     return render(request, 'blog/category.html', context)
 
 
+
+class post_detail_api(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerailizer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+class post_list_api(generics.ListAPIView):
+    queryset = Post.objects.all().order_by('-created_at')
+    serializer_class = PostSerailizer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+class PostViewset(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerailizer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]

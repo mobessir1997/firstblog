@@ -21,6 +21,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 from user.views import register, profile
 from django.contrib.auth.forms import SetPasswordForm
+from user.views import RegisterApi, ProfileApi, UserApi
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 
 urlpatterns = [
     path('msms/', admin.site.urls),
@@ -33,6 +36,11 @@ urlpatterns = [
     path("regsiter/", register, name="register"),
     path("profile/", profile, name="profile"),
     path('', include('blog.urls')),
+    path("api/register/", RegisterApi.as_view(), name="register_api"),
+    path("api/user/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"), 
+    path("api/user/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/user/profile/", ProfileApi.as_view(), name="profile_api"),
+    path("api/user/me/", UserApi.as_view(), name="user_data_api"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
